@@ -1,0 +1,22 @@
+version: "3.9"
+
+services:
+  movie-service:
+    build: .
+    container_name: movie-service
+    ports:
+      - "4002:4002"
+    env_file:
+      - .env
+    depends_on:
+      - mongo-movie
+
+  mongo-movie:
+    image: mongo:6
+    container_name: mongo-movie
+    volumes:
+      - mongo-movie-data:/data/db
+    ports:
+      - "27017:27017"
+volumes:
+  mongo-movie-data:
