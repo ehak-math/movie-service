@@ -2,13 +2,13 @@
   "name": "movie-service",
   "version": "1.0.0",
   "description": "Movie & Showtime Service for Movie Ticket Booking microservices",
-  "main": "src/server.js",
+  "main": "src/app.js",
   "scripts": {
-    "start": "node src/server.js",
-    "dev": "nodemon src/server.js",
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
     "lint": "eslint .",
-    "seed": "node src/seed/seed.js",
-    "test": "jest --runInBand"
+    "test": "jest --runInBand",
+    "coverage": "jest --coverage"
   },
   "keywords": [],
   "author": "",

@@ -1,6 +1,4 @@
-require('dotenv').config();
 const express = require('express');
-const mongoose = require('mongoose');
 const helmet = require('helmet');
 const cors = require('cors');
 const morgan = require('morgan');
@@ -20,23 +18,10 @@ app.use('/showtimes', showtimeRoutes);
 app.get('/', (req, res) => res.json({ service: 'movie-service', status: 'ok' }));
 
 // simple error handler
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
   console.error(err);
   res.status(err.status || 500).json({ error: err.message || 'internal server error' });
 });
 
-const MONGO = process.env.MONGO_URI || 'mongodb://localhost:27017/moviedb';
-const PORT = process.env.PORT || 4002;
-
-mongoose
-  .connect(MONGO, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => {
-    console.log('Connected to Movie DB');
-    app.listen(PORT, () => console.log(`Movie service listening on port ${PORT}`));
-  })
-  .catch((err) => {
-    console.error('Mongo connection error:', err);
-    process.exit(1);
-  });
 
 module.exports = app;

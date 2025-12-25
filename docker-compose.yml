@@ -6,17 +6,37 @@ services:
     container_name: movie-service
     ports:
       - "4002:4002"
-    env_file:
-      - .env
+    environment:
+      MONGO_URI: mongodb://mongo-movie:27017/moviedb
     depends_on:
-      - mongo-movie
+      mongo-movie:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - movie-service-network
 
   mongo-movie:
     image: mongo:6
     container_name: mongo-movie
+    ports:
+      - "27018:27017"   # avoid conflict with user-service Mongo
     volumes:
       - mongo-movie-data:/data/db
-    ports:
-      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: moviedb
+    restart: unless-stopped
+    networks:
+      - movie-service-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
 volumes:
   mongo-movie-data:
+
+networks:
+  movie-service-network:
+    driver: bridge
